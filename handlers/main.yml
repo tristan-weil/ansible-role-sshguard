@@ -1,0 +1,11 @@
+---
+
+- name: 'sshguard_reload_handler'
+  service:
+    name: 'sshguard'
+    state: 'reloaded'
+
+- name: 'sshguard_restart_handler'
+  service:
+    name: 'sshguard'
+    state: 'restarted'

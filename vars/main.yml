@@ -1,0 +1,81 @@
+---
+
+##############################################################################
+# Configuration
+##############################################################################
+_sshguard_default_config:
+  #### REQUIRED CONFIGURATION ####
+  # Full path to backend executable (required, no default)
+  BACKEND: "{{ _sshguard_backend_path }}"
+
+  #### OPTIONS ####
+  # Block attackers when their cumulative attack score exceeds THRESHOLD.
+  # Most attacks have a score of 10. (optional, default 30)
+  THRESHOLD: 30
+
+  # Block attackers for initially BLOCK_TIME seconds after exceeding THRESHOLD.
+  # Subsequent blocks increase by a factor of 1.5. (optional, default 120)
+  BLOCK_TIME: 120
+
+  # Remember potential attackers for up to DETECTION_TIME seconds before
+  # resetting their score. (optional, default 1800)
+  DETECTION_TIME: 1800
+
+  # IP addresses listed in the WHITELIST_FILE are considered to be
+  # friendlies and will never be blocked.
+  WHITELIST_FILE: "{{ _sshguard_whitelist_path }}"
+
+  # Blacklist threshold and file name
+  # BLACKLIST_FILE: "90:{{ _sshguard_blacklist_path }}"
+
+  # IPv6 subnet size to block. Defaults to a single address, CIDR notation. (optional, default to 128)
+  IPV6_SUBNET: 128
+
+  # IPv4 subnet size to block. Defaults to a single address, CIDR notation. (optional, default to 32)
+  IPV4_SUBNET: 32
+
+_sshguard_default_config_by_distribution:
+  Debian:
+    LOGREADER: '"LANG=C /bin/journalctl -afb -p info -n1 -o cat SYSLOG_FACILITY=4 SYSLOG_FACILITY=10"'
+
+  OpenBSD:
+    FILES: '/var/log/authlog'
+
+##############################################################################
+# Variables
+##############################################################################
+_sshguard_pkgs: "{{ _sshguard_pkgs_by_distribution[ ansible_facts['os_family'] ] }}"
+_sshguard_root_group: "{{ _sshguard_root_group_by_distribution[ ansible_facts['os_family'] ] }}"
+_sshguard_conf_path: "{{ _sshguard_conf_path_by_distribution[ ansible_facts['os_family'] ] }}"
+_sshguard_whitelist_path: "{{ _sshguard_whitelist_path_by_distribution[ ansible_facts['os_family'] ] }}"
+_sshguard_blacklist_path: "{{ _sshguard_blacklist_path_by_distribution[ ansible_facts['os_family'] ] }}"
+_sshguard_backend_path: "{{ _sshguard_backend_path_by_distribution[ ansible_facts['os_family'] ] }}"
+
+##############################################################################
+# Distributions' dictionaries
+##############################################################################
+_sshguard_pkgs_by_distribution:
+  Debian:
+    - 'sshguard'
+  OpenBSD:
+    - 'sshguard'
+
+_sshguard_conf_path_by_distribution:
+  Debian: '/etc/sshguard/sshguard.conf'
+  OpenBSD: '/etc/sshguard.conf'
+
+_sshguard_whitelist_path_by_distribution:
+  Debian: '/etc/sshguard/whitelist'
+  OpenBSD: '/etc/sshguard_whitelist'
+
+_sshguard_blacklist_path_by_distribution:
+  Debian: '/var/lib/sshguard/blacklist.Db'
+  OpenBSD: '/var/db/sshguard/blacklist.db'
+
+_sshguard_backend_path_by_distribution:
+  Debian: '/usr/lib/x86_64-linux-gnu/sshg-fw-nft-sets'
+  OpenBSD: '/usr/local/libexec/sshg-fw-pf'
+
+_sshguard_root_group_by_distribution:
+  Debian: 'root'
+  OpenBSD: 'wheel'

@@ -1,0 +1,7 @@
+---
+
+- name: 'add the sshguard service to init and start the service'
+  service:
+    name: 'sshguard'
+    enabled: True
+    state: 'started'

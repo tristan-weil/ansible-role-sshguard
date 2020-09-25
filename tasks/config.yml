@@ -1,0 +1,34 @@
+---
+
+- name: 'update whitelist'
+  copy:
+    content: |
+      127.0.0.0/8
+      ::1/128
+      {% for w in sshguard_whitelist %}
+      {{ w }}
+      {% endfor %}
+    dest: "{{ _sshguard_whitelist_path }}"
+    owner: 'root'
+    group: "{{ _sshguard_root_group }}"
+    mode: '0640'
+  notify:
+    - 'sshguard_restart_handler'
+
+- name: 'create blacklist directory'
+  file:
+    path: "{{ _sshguard_blacklist_path | dirname }}"
+    owner: 'root'
+    group: "{{ _sshguard_root_group }}"
+    mode: '0750'
+    state: 'directory'
+
+- name: 'update configuration'
+  template:
+    src: 'sshguard.conf.j2'
+    dest: "{{ _sshguard_conf_path }}"
+    owner: 'root'
+    group: "{{ _sshguard_root_group }}"
+    mode: '0640'
+  notify:
+    - 'sshguard_restart_handler'

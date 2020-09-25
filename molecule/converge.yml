@@ -1,0 +1,23 @@
+---
+
+- hosts: all
+  name: 'Converge'
+  become: True
+
+  tasks:
+    - name: 'create the PF table'
+      shell: |
+        pfctl -t sshguard -T add 1.1.1.1
+      changed_when: False
+      when: ansible_facts['os_family'] == "OpenBSD"
+
+    - import_role:
+        name: 'ansible-role-sshguard'
+      vars:
+        sshguard_whitelist:
+          - 'www.google.com'
+          - '8.8.8.8'
+
+        sshguard_config:
+          LOGREADER: 'DISABLED'
+          FILES: '/var/log/authlog'

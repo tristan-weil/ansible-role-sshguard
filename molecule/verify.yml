@@ -1,0 +1,59 @@
+---
+
+- hosts: all
+  name: 'Verify'
+  become: True
+  gather_facts: True
+
+  tasks:
+    - block:
+        - name: 'Get the content of the conf file'
+          slurp:
+            path: '/etc/sshguard.conf'
+          register: __verify_slurp
+
+        - name: 'Check the content of the conf file'
+          assert:
+            that:
+              - __verify_slurp.content | b64decode | regex_search('#LOGREADER')
+
+        - name: 'Get the content of the whitelist file'
+          slurp:
+            path: '/etc/sshguard_whitelist'
+          register: __verify_slurp
+
+        - name: 'Check the content of the whitelist file'
+          assert:
+            that:
+              - __verify_slurp.content | b64decode | regex_search('8.8.8.8')
+      when: ansible_facts['os_family'] == 'OpenBSD'
+
+    - block:
+        - name: 'Get the content of the conf file'
+          slurp:
+            path: '/etc/sshguard/sshguard.conf'
+          register: __verify_slurp
+
+        - name: 'Check the content of the conf file'
+          assert:
+            that:
+              - __verify_slurp.content | b64decode | regex_search('#LOGREADER')
+
+        - name: 'Get the content of the whitelist file'
+          slurp:
+            path: '/etc/sshguard/whitelist'
+          register: __verify_slurp
+
+        - name: 'Check the content of the whitelist file'
+          assert:
+            that:
+              - __verify_slurp.content | b64decode | regex_search('8.8.8.8')
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: 'Check service is enabled/started'
+      service:
+        name: 'sshguard'
+        enabled: True
+        state: 'started'
+      register: __verify
+      failed_when: __verify.changed

@@ -1,0 +1,12 @@
+{# ######################################## #}
+{# ##### MACROS ########################### #}
+{# ######################################## #}
+{% macro display_dict(dict) %}
+{% for (key, value) in dict|dictsort -%}
+{% if value == "DISABLED" %}#{% endif %}{{ key }}={{ value }}
+{% endfor %}
+{% endmacro %}
+{# ######################################## #}
+{# ##### MAIN ############################# #}
+{# ######################################## #}
+{{ display_dict(_sshguard_default_config | combine(_sshguard_default_config_by_distribution[ansible_facts['os_family']], recursive=True) | combine(sshguard_config, recursive=True)) }}
