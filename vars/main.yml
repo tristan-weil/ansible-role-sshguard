@@ -44,12 +44,12 @@ _sshguard_default_config_by_distribution:
 ##############################################################################
 # Variables
 ##############################################################################
-_sshguard_pkgs: "{{ _sshguard_pkgs_by_distribution[ ansible_facts['os_family'] ] }}"
-_sshguard_root_group: "{{ _sshguard_root_group_by_distribution[ ansible_facts['os_family'] ] }}"
-_sshguard_conf_path: "{{ _sshguard_conf_path_by_distribution[ ansible_facts['os_family'] ] }}"
-_sshguard_whitelist_path: "{{ _sshguard_whitelist_path_by_distribution[ ansible_facts['os_family'] ] }}"
-_sshguard_blacklist_path: "{{ _sshguard_blacklist_path_by_distribution[ ansible_facts['os_family'] ] }}"
-_sshguard_backend_path: "{{ _sshguard_backend_path_by_distribution[ ansible_facts['os_family'] ] }}"
+_sshguard_pkgs: "{{ _sshguard_pkgs_by_os_family[ ansible_facts['os_family'] ] }}"
+_sshguard_root_group: "{{ _sshguard_root_group_by_os_family[ ansible_facts['os_family'] ] }}"
+_sshguard_conf_path: "{{ _sshguard_conf_path_by_os_family[ ansible_facts['os_family'] ] }}"
+_sshguard_whitelist_path: "{{ _sshguard_whitelist_path_by_os_family[ ansible_facts['os_family'] ] }}"
+_sshguard_blacklist_path: "{{ _sshguard_blacklist_path_by_os_family[ ansible_facts['os_family'] ] }}"
+_sshguard_backend_path: "{{ _sshguard_backend_path_by_os_family[ ansible_facts['os_family'] ] }}"
 
 ##############################################################################
 # Distributions' dictionaries
