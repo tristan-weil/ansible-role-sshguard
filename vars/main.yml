@@ -34,7 +34,7 @@ _sshguard_default_config:
   # IPv4 subnet size to block. Defaults to a single address, CIDR notation. (optional, default to 32)
   IPV4_SUBNET: 32
 
-_sshguard_default_config_by_distribution:
+_sshguard_default_config_by_os_family:
   Debian:
     LOGREADER: '"LANG=C /bin/journalctl -afb -p info -n1 -o cat SYSLOG_FACILITY=4 SYSLOG_FACILITY=10"'
 
@@ -54,28 +54,28 @@ _sshguard_backend_path: "{{ _sshguard_backend_path_by_os_family[ ansible_facts['
 ##############################################################################
 # Distributions' dictionaries
 ##############################################################################
-_sshguard_pkgs_by_distribution:
+_sshguard_pkgs_by_os_family:
   Debian:
     - 'sshguard'
   OpenBSD:
     - 'sshguard'
 
-_sshguard_conf_path_by_distribution:
+_sshguard_conf_path_by_os_family:
   Debian: '/etc/sshguard/sshguard.conf'
   OpenBSD: '/etc/sshguard.conf'
 
-_sshguard_whitelist_path_by_distribution:
+_sshguard_whitelist_path_by_os_family:
   Debian: '/etc/sshguard/whitelist'
   OpenBSD: '/etc/sshguard_whitelist'
 
-_sshguard_blacklist_path_by_distribution:
+_sshguard_blacklist_path_by_os_family:
   Debian: '/var/lib/sshguard/blacklist.Db'
   OpenBSD: '/var/db/sshguard/blacklist.db'
 
-_sshguard_backend_path_by_distribution:
+_sshguard_backend_path_by_os_family:
   Debian: '/usr/lib/x86_64-linux-gnu/sshg-fw-nft-sets'
   OpenBSD: '/usr/local/libexec/sshg-fw-pf'
 
-_sshguard_root_group_by_distribution:
+_sshguard_root_group_by_os_family:
   Debian: 'root'
   OpenBSD: 'wheel'
