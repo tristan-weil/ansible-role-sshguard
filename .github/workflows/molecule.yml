@@ -32,5 +32,6 @@ jobs:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           PYTHONUNBUFFERED: '1'
+          MOLECULE_INSTANCE_NAME_ID: '${{ github.run_id }}'
         run: |
           molecule test -s docker_${{ matrix.distribution }}
