@@ -1,7 +1,7 @@
 License
 =======
 
-ansible-role-sshguard is free software under OpenBSD's ISC-style license.
+ansible-role-sshguard is free software under ISC-style license.
 
 > Copyright (c) 2020 Tristan Weil <titou@lab.t18s.fr>
 > 
