@@ -4,56 +4,32 @@
   name: 'Verify'
   become: True
   gather_facts: True
+  vars:
+    __verify_conf_by_os_family:
+      Debian: '/etc/sshguard/sshguard.conf'
+      OpenBSD: '/etc/sshguard.conf'
+
+    __verify_whitelist_by_os_family:
+      Debian: '/etc/sshguard/whitelist'
+      OpenBSD: '/etc/sshguard_whitelist'
 
   tasks:
-    - block:
-        - name: 'Get the content of the conf file'
-          slurp:
-            path: '/etc/sshguard.conf'
-          register: __verify_slurp
+    - name: 'Get the content of the conf file'
+      slurp:
+        path: "{{ __verify_conf_by_os_family[ ansible_facts['os_family'] ] }}"
+      register: __verify_slurp
+      failed_when: not __verify_slurp.content | b64decode | regex_search('#LOGREADER')
 
-        - name: 'Check the content of the conf file'
-          assert:
-            that:
-              - __verify_slurp.content | b64decode | regex_search('#LOGREADER')
-
-        - name: 'Get the content of the whitelist file'
-          slurp:
-            path: '/etc/sshguard_whitelist'
-          register: __verify_slurp
-
-        - name: 'Check the content of the whitelist file'
-          assert:
-            that:
-              - __verify_slurp.content | b64decode | regex_search('8.8.8.8')
-      when: ansible_facts['os_family'] == 'OpenBSD'
-
-    - block:
-        - name: 'Get the content of the conf file'
-          slurp:
-            path: '/etc/sshguard/sshguard.conf'
-          register: __verify_slurp
-
-        - name: 'Check the content of the conf file'
-          assert:
-            that:
-              - __verify_slurp.content | b64decode | regex_search('#LOGREADER')
-
-        - name: 'Get the content of the whitelist file'
-          slurp:
-            path: '/etc/sshguard/whitelist'
-          register: __verify_slurp
-
-        - name: 'Check the content of the whitelist file'
-          assert:
-            that:
-              - __verify_slurp.content | b64decode | regex_search('8.8.8.8')
-      when: ansible_facts['os_family'] == 'Debian'
+    - name: 'Get the content of the whitelist file'
+      slurp:
+        path: "{{ __verify_whitelist_by_os_family[ ansible_facts['os_family'] ] }}"
+      register: __verify_slurp
+      failed_when: not __verify_slurp.content | b64decode | regex_search('8.8.8.8')
 
     - name: 'Check service is enabled/started'
       service:
         name: 'sshguard'
         enabled: True
         state: 'started'
-      register: __verify
-      failed_when: __verify.changed
+      register: __verify_svc
+      failed_when: __verify_svc.changed
