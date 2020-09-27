@@ -73,7 +73,7 @@ _sshguard_blacklist_path_by_os_family:
   OpenBSD: '/var/db/sshguard/blacklist.db'
 
 _sshguard_backend_path_by_os_family:
-  Debian: '/usr/lib/x86_64-linux-gnu/sshg-fw-nft-sets'
+  Debian: '/usr/lib/x86_64-linux-gnu/sshg-fw-firewalld'
   OpenBSD: '/usr/local/libexec/sshg-fw-pf'
 
 _sshguard_root_group_by_os_family:

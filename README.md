@@ -2,6 +2,8 @@
 
 An Ansible Role to install and configure `sshguard`.
 
+**NOTE**: by default this role supports *firewalld* as backend for Linux distributions.
+
 [![Actions Status](https://github.com/tristan-weil/ansible-role-sshguard/workflows/molecule/badge.svg?branch=master)](https://github.com/tristan-weil/ansible-role-sshguard/actions)
 
 ## Role Variables
